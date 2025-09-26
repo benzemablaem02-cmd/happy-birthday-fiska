@@ -1,1 +1,636 @@
-# happy-birthday-fiska
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ucapan Selamat Ulang Tahun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Container Polaroid */
+        .polaroid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        /* Polaroid Style */
+        .polaroid {
+            background: #fff;
+            padding: 15px 15px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: rotate(var(--rotation));
+            transition: all 0.3s ease;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .polaroid .caption {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            text-align: center;
+            font-size: 1rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Message Section */
+        .message-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.5s both;
+            margin-bottom: 30px;
+        }
+
+        .message-section h2 {
+            font-size: 2.5rem;
+            color: #764ba2;
+            margin-bottom: 20px;
+        }
+
+        .message-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* Celebration Button */
+        .celebration-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .celebrate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(238, 90, 36, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .celebrate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(238, 90, 36, 0.6);
+        }
+
+        .celebrate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .celebrate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .celebrate-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Music Controls */
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .music-btn {
+            background: #764ba2;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: #5a3785;
+            transform: scale(1.1);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #764ba2;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #764ba2;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Balloon Animation */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            animation: balloon-rise 10s infinite ease-in-out;
+            opacity: 0.8;
+            font-size: 3rem;
+            z-index: 1;
+        }
+
+        .balloon:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .balloon:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .balloon:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .balloon:nth-child(4) { left: 40%; animation-delay: 6s; }
+        .balloon:nth-child(5) { left: 50%; animation-delay: 8s; }
+        .balloon:nth-child(6) { left: 60%; animation-delay: 1s; }
+        .balloon:nth-child(7) { left: 70%; animation-delay: 3s; }
+        .balloon:nth-child(8) { left: 80%; animation-delay: 5s; }
+        .balloon:nth-child(9) { left: 90%; animation-delay: 7s; }
+
+        /* Fireworks */
+        .firework {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: firework-explode 1s ease-out forwards;
+        }
+
+        @keyframes firework-explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(var(--rotation));
+            }
+            50% {
+                transform: translateY(-20px) rotate(var(--rotation));
+            }
+        }
+
+        @keyframes balloon-rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(30px);
+            }
+            100% {
+                bottom: 110vh;
+                transform: translateX(-30px);
+            }
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        /* Celebration Mode */
+        body.celebrating {
+            animation: celebrate-pulse 0.5s ease-in-out;
+        }
+
+        @keyframes celebrate-pulse {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.2);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1.2rem;
+            }
+            
+            .message-section {
+                padding: 20px;
+            }
+            
+            .message-section h2 {
+                font-size: 2rem;
+            }
+            
+            .message-section p {
+                font-size: 1rem;
+            }
+            
+            .celebrate-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .music-controls {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Balloons -->
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎉</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎉</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎉</div>
+    <div class="balloon">🎈</div>
+    <div class="balloon">🎉</div>
+    <div class="balloon">🎈</div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>🎉 Selamat Ulang Tahun! 🎂</h1>
+        <p>Semoga hari spesialmu penuh kebahagiaan</p>
+    </div>
+
+    <!-- Polaroid Photos -->
+    <div class="polaroid-container">
+        <div class="polaroid" style="--rotation: -5deg; --delay: 0s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.24.58_56953ea9.jpg" alt="Memory 1">
+            <div class="caption">my princess canti</div>
+        </div>
+        
+        <div class="polaroid" style="--rotation: 3deg; --delay: 0.5s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.22.09_6c4d9656.jpg" alt="Memory 2">
+            <div class="caption">baik</div>
+        </div>
+        
+        <div class="polaroid" style="--rotation: -2deg; --delay: 1s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.20.29_8f32e849.jpg" alt="Memory 3">
+            <div class="caption">cantik</div>
+        </div>
+        
+        <div class="polaroid" style="--rotation: 4deg; --delay: 1.5s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.12.42_78b12224.jpg" alt="Memory 4">
+            <div class="caption">manis</div>
+        </div>
+        
+        <div class="polaroid" style="--rotation: -3deg; --delay: 2s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.08.34_6c6a5027.jpg" alt="Memory 5">
+            <div class="caption">ceria</div>
+        </div>
+        
+        <div class="polaroid" style="--rotation: 2deg; --delay: 2.5s;">
+            <img src="Gambar WhatsApp 2025-09-26 pukul 23.08.33_cf2d8b6f.jpg" alt="Memory 6">
+            <div class="caption">Ceria Selalu</div>
+        </div>
+    </div>
+
+    <!-- Message Section -->
+    <div class="message-section">
+        <h2>💝 Ucapan Spesial Untukmu 💝</h2>
+        <p>Di hari ulang tahunmu yang spesial ini, aku ingin mengucapkan selamat atas tambahan usiamu.</p>
+        <p>Semoga di usiamu yang baru ini, kamu selalu diberikan kesehatan, kebahagiaan, dan kesuksesan dalam setiap langkahmu.</p>
+        <p>Terima kasih sudah menjadi teman yang luar biasa, selalu ada di saat susah maupun senang.</p>
+        <p>🌟 Semoga semua impianmu menjadi kenyataan dan setiap harimu dipenuhi dengan senyum dan tawa! 🌟</p>
+        <p>🎈 Selamat ulang tahun! Semoga tahun ini menjadi tahun terbaik dalam hidupmu! 🎈</p>
+    </div>
+
+    <!-- Celebration Controls -->
+    <div class="celebration-controls">
+        <button class="celebrate-btn" onclick="startCelebration()">
+            🎊 Rayakan Sekarang! 🎊
+        </button>
+        
+        <div class="music-controls">
+            <button class="music-btn" id="musicToggle" onclick="toggleMusic()">
+                ▶️
+            </button>
+            <div class="volume-control">
+                <span>🔊</span>
+                <input type="range" class="volume-slider" id="volumeSlider" 
+                       min="0" max="100" value="50" onchange="changeVolume(this.value)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio setup
+        const audio = new Audio();
+        audio.src = 'https://files.catbox.moe/iwx97v.mp3';
+        audio.loop = true;
+        audio.volume = 0.5;
+
+        let isPlaying = false;
+
+        // Toggle music
+        function toggleMusic() {
+            const musicBtn = document.getElementById('musicToggle');
+            
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.textContent = '▶️';
+                isPlaying = false;
+            } else {
+                audio.play().catch(e => console.log('Audio play failed:', e));
+                musicBtn.textContent = '⏸️';
+                isPlaying = true;
+            }
+        }
+
+        // Change volume
+        function changeVolume(value) {
+            audio.volume = value / 100;
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 3 + 's';
+            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+
+        // Create firework
+        function createFirework(x, y) {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 50 + Math.random() * 50;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                particle.style.setProperty('--vx', vx + 'px');
+                particle.style.setProperty('--vy', vy + 'px');
+                
+                document.body.appendChild(particle);
+                
+                // Animate particle
+                let posX = 0;
+                let posY = 0;
+                let opacity = 1;
+                
+                const animateParticle = () => {
+                    posX += vx * 0.02;
+                    posY += vy * 0.02;
+                    opacity -= 0.02;
+                    
+                    particle.style.transform = `translate(${posX}px, ${posY}px)`;
+                    particle.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animateParticle);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                requestAnimationFrame(animateParticle);
+            }
+        }
+
+        // Start celebration
+        function startCelebration() {
+            // Add celebrating class to body
+            document.body.classList.add('celebrating');
+            setTimeout(() => {
+                document.body.classList.remove('celebrating');
+            }, 500);
+            
+            // Create multiple fireworks
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight * 0.5;
+                    createFirework(x, y);
+                }, i * 200);
+            }
+            
+            // Create burst of confetti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createConfetti();
+                }, i * 50);
+            }
+            
+            // Play sound effect if available
+            if (isPlaying) {
+                // Create a temporary audio for celebration sound
+                const celebrationSound = new Audio();
+                celebrationSound.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+                celebrationSound.volume = 0.5;
+                celebrationSound.play().catch(e => console.log('Celebration sound failed:', e));
+            }
+            
+            // Shake polaroids
+            document.querySelectorAll('.polaroid').forEach((polaroid, index) => {
+                setTimeout(() => {
+                    polaroid.style.animation = 'none';
+                    polaroid.style.transform = 'rotate(0deg) scale(1.1)';
+                    setTimeout(() => {
+                        polaroid.style.transform = '';
+                        polaroid.style.animation = '';
+                    }, 300);
+                }, index * 100);
+            });
+        }
+
+        // Create confetti periodically
+        setInterval(createConfetti, 300);
+
+        // Add click interaction to polaroids
+        document.querySelectorAll('.polaroid').forEach(polaroid => {
+            polaroid.addEventListener('click', function() {
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 10);
+                
+                // Create small firework at click position
+                const rect = this.getBoundingClientRect();
+                createFirework(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+        });
+
+        // Auto-play music on first user interaction
+        document.addEventListener('click', function autoPlay() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('musicToggle').textContent = '⏸️';
+                }).catch(e => console.log('Auto-play failed:', e));
+            }
+            document.removeEventListener('click', autoPlay);
+        }, { once: true });
+    </script>
+</body>
+</html>
